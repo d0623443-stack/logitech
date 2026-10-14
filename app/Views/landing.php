@@ -50,9 +50,6 @@
 
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
-
-  <!-- jsPDF for Real Instant Executive Bio PDF Download -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body class="editorial-paper text-stone-900 dark:text-stone-100 transition-colors duration-200 antialiased selection:bg-logi-teal selection:text-black min-h-screen flex flex-col justify-between">
 
@@ -74,7 +71,7 @@
     <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
       
       <!-- Brand / Logo: logicindia.tech -->
-      <a href="<?= base_url() ?>" class="flex items-center gap-1 group">
+      <a href="<?= base_url() ?>" id="gtm-nav-logo" data-gtm-category="navigation" data-gtm-action="click" data-gtm-label="Home Logo" class="flex items-center gap-1 group">
         <span class="font-extrabold text-2xl tracking-tighter text-stone-950 dark:text-white font-sans transition-transform group-hover:scale-105">
           logicindia<span class="text-logi-teal font-black text-2xl">.tech</span>
         </span>
@@ -82,28 +79,27 @@
 
       <!-- Center Nav Links -->
       <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-stone-600 dark:text-stone-400">
-        <a href="#unveil" class="hover:text-stone-950 dark:hover:text-white transition-colors">The Unveil</a>
-        <a href="#ongoing-tech" class="hover:text-stone-950 dark:hover:text-white transition-colors">Ongoing Tech</a>
-        <a href="#bio-whitepaper" class="hover:text-stone-950 dark:hover:text-white transition-colors">Bio & R&D</a>
-        <a href="#newsletter" class="hover:text-stone-950 dark:hover:text-white transition-colors">Dispatch</a>
-        <a href="#laboratories" class="hover:text-stone-950 dark:hover:text-white transition-colors">R&D Labs</a>
+        <a href="#unveil" id="gtm-nav-unveil" data-gtm-category="navigation" data-gtm-action="click" data-gtm-label="The Unveil" class="hover:text-stone-950 dark:hover:text-white transition-colors">The Unveil</a>
+        <a href="#ongoing-tech" id="gtm-nav-tech" data-gtm-category="navigation" data-gtm-action="click" data-gtm-label="Ongoing Tech" class="hover:text-stone-950 dark:hover:text-white transition-colors">Ongoing Tech</a>
+        <a href="#bio-whitepaper" id="gtm-nav-bio" data-gtm-category="navigation" data-gtm-action="click" data-gtm-label="Bio and R&D" class="hover:text-stone-950 dark:hover:text-white transition-colors">Bio & R&D</a>
+        <a href="<?= base_url('subscribe') ?>" id="gtm-nav-newsletter-link" data-gtm-category="navigation" data-gtm-action="click" data-gtm-label="Newsletter Page" class="hover:text-stone-950 dark:hover:text-white transition-colors">Dispatch</a>
+        <a href="#laboratories" id="gtm-nav-labs" data-gtm-category="navigation" data-gtm-action="click" data-gtm-label="R&D Labs" class="hover:text-stone-950 dark:hover:text-white transition-colors">R&D Labs</a>
       </nav>
 
       <!-- Action Cluster -->
       <div class="flex items-center gap-3">
-        <!-- Download Bio PDF Button (Nav) -->
-        <button class="btn-download-bio-pdf hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold tracking-wide border border-stone-300 dark:border-stone-700 hover:border-logi-teal text-stone-700 dark:text-stone-300 hover:text-stone-900 dark:hover:text-white transition-all bg-white/60 dark:bg-stone-900/60 shadow-sm" title="Download Official logicindia.tech Innovation Bio PDF">
-          <i data-lucide="file-down" class="w-3.5 h-3.5 text-logi-teal"></i>
-          <span>Bio PDF</span>
-        </button>
+        <!-- Download Bio PDF Anchor Tag (NO SVG) -->
+        <a href="<?= base_url('download-bio-pdf') ?>" download="LogicIndia_Tech_Innovation_Bio_2026.pdf" id="gtm-nav-download-bio" data-gtm-category="downloads" data-gtm-action="click" data-gtm-label="Nav Download Bio PDF" class="hidden sm:inline-flex items-center px-3.5 py-1.5 rounded-full text-xs font-semibold tracking-wide border border-stone-300 dark:border-stone-700 hover:border-emerald-500 text-stone-700 dark:text-stone-300 hover:text-stone-900 dark:hover:text-white transition-all bg-white/60 dark:bg-stone-900/60 shadow-sm" title="Download Official logicindia.tech Innovation Bio PDF">
+          Download Bio PDF
+        </a>
 
         <!-- Direct Contact Modal Opener -->
-        <button class="btn-open-contact hidden lg:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold tracking-wide bg-stone-900 text-white dark:bg-white dark:text-stone-900 hover:bg-stone-800 dark:hover:bg-stone-100 transition-all shadow-sm">
+        <button id="gtm-nav-btn-contact" data-gtm-category="lead" data-gtm-action="click" data-gtm-label="Nav Inquire Button" class="btn-open-contact hidden lg:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold tracking-wide bg-stone-900 text-white dark:bg-white dark:text-stone-900 hover:bg-stone-800 dark:hover:bg-stone-100 transition-all shadow-sm">
           <span>Inquire</span>
         </button>
 
         <!-- Dark / Paper Mode Switcher -->
-        <button id="theme-toggle" aria-label="Toggle Theme" class="p-2 rounded-full border border-stone-200 dark:border-stone-800 text-stone-600 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors">
+        <button id="gtm-theme-toggle" aria-label="Toggle Theme" data-gtm-category="settings" data-gtm-action="click" data-gtm-label="Theme Switcher" class="p-2 rounded-full border border-stone-200 dark:border-stone-800 text-stone-600 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors">
           <i data-lucide="moon" class="w-4 h-4 hidden dark:block"></i>
           <i data-lucide="sun" class="w-4 h-4 block dark:hidden"></i>
         </button>
@@ -156,18 +152,18 @@
         <!-- Social / Medium Action Buttons -->
         <div class="flex items-center gap-3 text-stone-600 dark:text-stone-400">
           <!-- Clap Button -->
-          <button class="btn-clap relative flex items-center gap-2 px-3 py-1.5 rounded-full border border-stone-200 dark:border-stone-800 hover:border-emerald-500 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors bg-white/40 dark:bg-stone-900/40 text-xs font-medium" title="Clap to show appreciation (up to 50 times)">
+          <button id="gtm-btn-clap" data-gtm-category="engagement" data-gtm-action="click" data-gtm-label="Story Clap" class="btn-clap relative flex items-center gap-2 px-3 py-1.5 rounded-full border border-stone-200 dark:border-stone-800 hover:border-emerald-500 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors bg-white/40 dark:bg-stone-900/40 text-xs font-medium" title="Clap to show appreciation (up to 50 times)">
             <i data-lucide="heart" class="w-4 h-4 transition-transform"></i>
             <span class="clap-count-display font-mono">3,842</span>
           </button>
 
           <!-- Bookmark Button -->
-          <button class="btn-bookmark p-2 rounded-full border border-stone-200 dark:border-stone-800 hover:text-emerald-500 transition-colors bg-white/40 dark:bg-stone-900/40" title="Save story">
+          <button id="gtm-btn-bookmark" data-gtm-category="engagement" data-gtm-action="click" data-gtm-label="Story Bookmark" class="btn-bookmark p-2 rounded-full border border-stone-200 dark:border-stone-800 hover:text-emerald-500 transition-colors bg-white/40 dark:bg-stone-900/40" title="Save story">
             <i data-lucide="bookmark" class="w-4 h-4"></i>
           </button>
 
           <!-- Share Button -->
-          <button class="btn-share p-2 rounded-full border border-stone-200 dark:border-stone-800 hover:text-emerald-500 transition-colors bg-white/40 dark:bg-stone-900/40" title="Copy story link">
+          <button id="gtm-btn-share" data-gtm-category="engagement" data-gtm-action="click" data-gtm-label="Story Share" class="btn-share p-2 rounded-full border border-stone-200 dark:border-stone-800 hover:text-emerald-500 transition-colors bg-white/40 dark:bg-stone-900/40" title="Copy story link">
             <i data-lucide="share-2" class="w-4 h-4"></i>
           </button>
         </div>
@@ -176,7 +172,7 @@
       <!-- Medium Audio Narration Player Bar -->
       <div class="mb-10 p-4 rounded-2xl bg-stone-100/80 dark:bg-stone-900/60 border border-stone-200/80 dark:border-stone-800 flex items-center justify-between gap-4">
         <div class="flex items-center gap-3">
-          <button id="audio-play-toggle" aria-label="Play audio narration" class="w-10 h-10 rounded-full bg-stone-900 text-white dark:bg-stone-100 dark:text-stone-900 flex items-center justify-center hover:scale-105 transition-transform flex-shrink-0 shadow">
+          <button id="audio-play-toggle" data-gtm-category="media" data-gtm-action="click" data-gtm-label="Audio Narration Play" aria-label="Play audio narration" class="w-10 h-10 rounded-full bg-stone-900 text-white dark:bg-stone-100 dark:text-stone-900 flex items-center justify-center hover:scale-105 transition-transform flex-shrink-0 shadow">
             <i data-lucide="play" class="w-4 h-4 icon-play ml-0.5"></i>
             <i data-lucide="pause" class="w-4 h-4 icon-pause hidden"></i>
           </button>
@@ -234,14 +230,15 @@
           </div>
         </div>
 
-        <!-- Early Access Direct Inline Input -->
+        <!-- Early Access Direct Inline Input (Submits to Dedicated Page) -->
         <div class="mt-8 pt-6 border-t border-stone-800/80 flex flex-col sm:flex-row items-center gap-3">
-          <form id="hero-newsletter-form" class="w-full flex flex-col sm:flex-row gap-2">
+          <form id="hero-newsletter-form" action="<?= base_url('subscribe') ?>" method="POST" data-gtm-category="newsletter" data-gtm-action="submit" data-gtm-label="Hero Early Access Form" class="w-full flex flex-col sm:flex-row gap-2">
+            <?= csrf_field() ?>
             <div class="relative flex-1">
               <i data-lucide="mail" class="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-stone-400"></i>
-              <input type="email" required placeholder="Enter your work email for priority developer access..." class="w-full pl-10 pr-4 py-3 rounded-xl bg-stone-800/90 border border-stone-700 text-white placeholder-stone-400 text-sm focus:outline-none focus:border-logi-teal transition-colors">
+              <input type="email" name="email" id="gtm-hero-email-input" required placeholder="Enter your work email for priority developer access..." class="w-full pl-10 pr-4 py-3 rounded-xl bg-stone-800/90 border border-stone-700 text-white placeholder-stone-400 text-sm focus:outline-none focus:border-logi-teal transition-colors">
             </div>
-            <button type="submit" class="px-6 py-3 rounded-xl bg-logi-teal text-stone-950 font-bold text-sm hover:bg-emerald-400 transition-colors shadow-lg shadow-emerald-500/20 whitespace-nowrap">
+            <button type="submit" id="gtm-hero-submit-btn" data-gtm-category="newsletter" data-gtm-action="click" data-gtm-label="Reserve Early Access Button" class="px-6 py-3 rounded-xl bg-logi-teal text-stone-950 font-bold text-sm hover:bg-emerald-400 transition-colors shadow-lg shadow-emerald-500/20 whitespace-nowrap">
               Reserve Early Access
             </button>
           </form>
@@ -355,7 +352,7 @@
                   </div>
                 </div>
 
-                <button class="btn-read-dispatch inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold text-emerald-700 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 transition-colors" data-dispatch-key="<?= esc($key) ?>">
+                <button id="gtm-read-story-<?= esc($key) ?>" data-gtm-category="stories" data-gtm-action="click" data-gtm-label="<?= esc($tech['title']) ?>" class="btn-read-dispatch inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold text-emerald-700 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 transition-colors" data-dispatch-key="<?= esc($key) ?>">
                   <span>Read Story</span>
                   <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
                 </button>
@@ -371,7 +368,7 @@
     </section>
 
 
-    <!-- SECTION: CORPORATE & INNOVATION BIO + DOWNLOAD PDF -->
+    <!-- SECTION: CORPORATE & INNOVATION BIO + DOWNLOAD PDF (ANCHOR TAG, NO SVG) -->
     <section id="bio-whitepaper" class="py-16 border-t border-stone-200/80 dark:border-stone-800">
       <div class="max-w-6xl mx-auto px-4 sm:px-6">
         
@@ -379,7 +376,6 @@
           
           <div class="max-w-3xl">
             <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 text-xs font-mono font-semibold mb-4">
-              <i data-lucide="award" class="w-3.5 h-3.5"></i>
               <span>OFFICIAL CORPORATE & RESEARCH PROFILE</span>
             </div>
 
@@ -401,18 +397,16 @@
               <?php endforeach; ?>
             </div>
 
-            <!-- Download Buttons Row -->
+            <!-- Download Anchor Tag Row (NO SVG) -->
             <div class="flex flex-wrap items-center gap-4">
-              <!-- Real Instant Client-side PDF Generator -->
-              <button class="btn-download-bio-pdf inline-flex items-center gap-2.5 px-6 py-3.5 rounded-xl bg-stone-950 text-white dark:bg-white dark:text-stone-950 font-bold text-sm hover:scale-[1.02] transition-transform shadow-lg shadow-black/10">
-                <i data-lucide="file-down" class="w-4 h-4 text-emerald-400 dark:text-emerald-600"></i>
-                <span>Download Bio PDF (Executive Briefing)</span>
-              </button>
+              <!-- Direct PDF Download Anchor Tag (NO SVG) -->
+              <a href="<?= base_url('download-bio-pdf') ?>" download="LogicIndia_Tech_Innovation_Bio_2026.pdf" id="gtm-bio-section-download-pdf" data-gtm-category="downloads" data-gtm-action="click" data-gtm-label="Bio Section Download PDF" class="inline-flex items-center px-6 py-3.5 rounded-xl bg-stone-950 text-white dark:bg-white dark:text-stone-950 font-bold text-sm hover:scale-[1.02] transition-transform shadow-lg shadow-black/10">
+                Download Bio PDF (Executive Briefing)
+              </a>
 
-              <!-- Server-side fallback stream link -->
-              <a href="<?= base_url('download-bio') ?>" target="_blank" class="inline-flex items-center gap-2 px-5 py-3.5 rounded-xl border border-stone-300 dark:border-stone-700 text-stone-700 dark:text-stone-300 hover:bg-stone-200 dark:hover:bg-stone-800 font-semibold text-sm transition-colors">
-                <i data-lucide="external-link" class="w-4 h-4"></i>
-                <span>View HTML Bio Record</span>
+              <!-- Dedicated Subscription Link -->
+              <a href="<?= base_url('subscribe') ?>" id="gtm-bio-to-subscribe-page" data-gtm-category="navigation" data-gtm-action="click" data-gtm-label="Bio Section to Subscribe Page" class="inline-flex items-center px-5 py-3.5 rounded-xl border border-stone-300 dark:border-stone-700 text-stone-700 dark:text-stone-300 hover:bg-stone-200 dark:hover:bg-stone-800 font-semibold text-sm transition-colors">
+                <span>Subscribe to Dispatch Page</span>
               </a>
             </div>
 
@@ -427,7 +421,7 @@
     </section>
 
 
-    <!-- SECTION: NEWSLETTER SUBSCRIPTION (The Horizon Dispatch) -->
+    <!-- SECTION: NEWSLETTER SUBSCRIPTION (The Horizon Dispatch - SUBMITS TO DEDICATED PAGE) -->
     <section id="newsletter" class="py-16 border-t border-stone-200/80 dark:border-stone-800 bg-[#FAF8F5] dark:bg-[#0E0E10]">
       <div class="max-w-4xl mx-auto px-4 sm:px-6 text-center">
         
@@ -443,13 +437,14 @@
           Join 45,800+ hardware architects, computational designers, and engineers receiving our bi-weekly deep dives into interface physics and private prototype invitations.
         </p>
 
-        <!-- Newsletter Form -->
-        <form id="footer-newsletter-form" class="max-w-xl mx-auto flex flex-col sm:flex-row gap-3">
+        <!-- Newsletter Form Submits to Dedicated Page -->
+        <form id="footer-newsletter-form" action="<?= base_url('subscribe') ?>" method="POST" data-gtm-category="newsletter" data-gtm-action="submit" data-gtm-label="Footer Newsletter Form" class="max-w-xl mx-auto flex flex-col sm:flex-row gap-3">
+          <?= csrf_field() ?>
           <div class="relative flex-1">
             <i data-lucide="mail" class="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-stone-400"></i>
-            <input type="email" required placeholder="Enter your work email address..." class="w-full pl-10 pr-4 py-3.5 rounded-xl bg-white dark:bg-stone-900 border border-stone-300 dark:border-stone-700 text-stone-900 dark:text-white placeholder-stone-400 text-sm focus:outline-none focus:border-logi-teal transition-colors shadow-sm">
+            <input type="email" name="email" id="gtm-footer-email-input" required placeholder="Enter your work email address..." class="w-full pl-10 pr-4 py-3.5 rounded-xl bg-white dark:bg-stone-900 border border-stone-300 dark:border-stone-700 text-stone-900 dark:text-white placeholder-stone-400 text-sm focus:outline-none focus:border-logi-teal transition-colors shadow-sm">
           </div>
-          <button type="submit" class="px-7 py-3.5 rounded-xl bg-stone-900 text-white dark:bg-white dark:text-stone-900 font-bold text-sm hover:bg-stone-800 dark:hover:bg-stone-100 transition-all shadow-md flex items-center justify-center gap-2">
+          <button type="submit" id="gtm-footer-submit-btn" data-gtm-category="newsletter" data-gtm-action="click" data-gtm-label="Footer Subscribe Button" class="px-7 py-3.5 rounded-xl bg-stone-900 text-white dark:bg-white dark:text-stone-900 font-bold text-sm hover:bg-stone-800 dark:hover:bg-stone-100 transition-all shadow-md flex items-center justify-center gap-2">
             <span>Subscribe</span>
             <i data-lucide="arrow-right" class="w-4 h-4"></i>
           </button>
@@ -458,7 +453,9 @@
         <div class="flex flex-wrap items-center justify-center gap-6 mt-6 text-xs text-stone-500 dark:text-stone-400 font-mono">
           <span class="flex items-center gap-1.5"><i data-lucide="check" class="w-3.5 h-3.5 text-emerald-500"></i> No Spam Ever</span>
           <span class="flex items-center gap-1.5"><i data-lucide="check" class="w-3.5 h-3.5 text-emerald-500"></i> Bi-weekly Cadence</span>
-          <span class="flex items-center gap-1.5"><i data-lucide="check" class="w-3.5 h-3.5 text-emerald-500"></i> One-Click Unsubscribe</span>
+          <a href="<?= base_url('subscribe') ?>" id="gtm-footer-dedicated-subscribe-link" data-gtm-category="navigation" data-gtm-action="click" data-gtm-label="Footer Dedicated Subscribe Link" class="text-emerald-600 dark:text-emerald-400 hover:underline">
+            Visit Dedicated Subscription Page →
+          </a>
         </div>
 
       </div>
@@ -475,7 +472,7 @@
             <h2 class="text-3xl sm:text-4xl font-serif font-bold text-stone-950 dark:text-white tracking-tight">National R&D Facilities</h2>
           </div>
           
-          <button class="btn-open-contact inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-stone-100 dark:bg-stone-800 text-stone-900 dark:text-white hover:bg-stone-200 dark:hover:bg-stone-700 text-sm font-semibold transition-colors">
+          <button id="gtm-labs-open-contact" data-gtm-category="lead" data-gtm-action="click" data-gtm-label="Labs Open Contact Modal" class="btn-open-contact inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-stone-100 dark:bg-stone-800 text-stone-900 dark:text-white hover:bg-stone-200 dark:hover:bg-stone-700 text-sm font-semibold transition-colors">
             <i data-lucide="send" class="w-4 h-4 text-emerald-500"></i>
             <span>Send Direct Lab Inquiry</span>
           </button>
@@ -512,11 +509,11 @@
             <div class="pt-4 border-t border-stone-200 dark:border-stone-800/80 text-xs space-y-1 font-mono text-stone-600 dark:text-stone-400">
               <div class="flex items-center justify-between">
                 <span>Inquiries:</span>
-                <a href="mailto:<?= esc($lab['contact_email']) ?>" class="text-emerald-600 dark:text-emerald-400 hover:underline"><?= esc($lab['contact_email']) ?></a>
+                <a href="mailto:<?= esc($lab['contact_email']) ?>" id="gtm-lab-mail-<?= strtolower(esc($lab['city'])) ?>" data-gtm-category="contact" data-gtm-action="click" data-gtm-label="Email <?= esc($lab['city']) ?>" class="text-emerald-600 dark:text-emerald-400 hover:underline"><?= esc($lab['contact_email']) ?></a>
               </div>
               <div class="flex items-center justify-between">
                 <span>Telephone:</span>
-                <span><?= esc($lab['phone']) ?></span>
+                <a href="tel:<?= esc($lab['phone']) ?>" id="gtm-lab-tel-<?= strtolower(esc($lab['city'])) ?>" data-gtm-category="contact" data-gtm-action="click" data-gtm-label="Tel <?= esc($lab['city']) ?>" class="hover:underline"><?= esc($lab['phone']) ?></a>
               </div>
             </div>
           </div>
@@ -542,12 +539,18 @@
         </div>
 
         <div class="flex flex-wrap items-center gap-6 text-xs text-stone-500 dark:text-stone-400">
-          <a href="#unveil" class="hover:underline">The Unveil</a>
-          <a href="#ongoing-tech" class="hover:underline">Research Papers</a>
-          <a href="#bio-whitepaper" class="hover:underline">Corporate Bio</a>
-          <a href="<?= base_url('download-bio') ?>" class="hover:underline">Executive PDF</a>
-          <a href="#laboratories" class="hover:underline">Locations</a>
-          <button class="btn-open-contact hover:underline text-emerald-600 dark:text-emerald-400">Contact ATG</button>
+          <a href="#unveil" id="gtm-footer-unveil" data-gtm-category="navigation" data-gtm-action="click" data-gtm-label="Footer Unveil" class="hover:underline">The Unveil</a>
+          <a href="#ongoing-tech" id="gtm-footer-tech" data-gtm-category="navigation" data-gtm-action="click" data-gtm-label="Footer Tech" class="hover:underline">Research Papers</a>
+          <a href="#bio-whitepaper" id="gtm-footer-bio" data-gtm-category="navigation" data-gtm-action="click" data-gtm-label="Footer Bio" class="hover:underline">Corporate Bio</a>
+          
+          <!-- Download Bio PDF Anchor Tag (NO SVG) -->
+          <a href="<?= base_url('download-bio-pdf') ?>" download="LogicIndia_Tech_Innovation_Bio_2026.pdf" id="gtm-footer-download-bio" data-gtm-category="downloads" data-gtm-action="click" data-gtm-label="Footer Download Bio PDF" class="hover:underline text-stone-700 dark:text-stone-300 font-semibold">
+            Download Bio PDF
+          </a>
+
+          <a href="<?= base_url('subscribe') ?>" id="gtm-footer-subscribe-link" data-gtm-category="navigation" data-gtm-action="click" data-gtm-label="Footer Subscribe Page" class="hover:underline">Subscribe Page</a>
+          <a href="#laboratories" id="gtm-footer-locations" data-gtm-category="navigation" data-gtm-action="click" data-gtm-label="Footer Locations" class="hover:underline">Locations</a>
+          <button id="gtm-footer-contact" data-gtm-category="lead" data-gtm-action="click" data-gtm-label="Footer Contact ATG" class="btn-open-contact hover:underline text-emerald-600 dark:text-emerald-400">Contact ATG</button>
         </div>
 
       </div>
@@ -572,7 +575,7 @@
     <div class="relative w-full max-w-3xl bg-[#FAF8F5] dark:bg-[#121215] rounded-3xl border border-stone-200 dark:border-stone-800 shadow-2xl p-6 sm:p-10 my-8 max-h-[90vh] overflow-y-auto">
       
       <!-- Close button -->
-      <button id="close-article-modal" class="absolute top-6 right-6 p-2 rounded-full hover:bg-stone-200 dark:hover:bg-stone-800 text-stone-500 transition-colors" aria-label="Close reader">
+      <button id="close-article-modal" data-gtm-category="modal" data-gtm-action="click" data-gtm-label="Close Article Reader" class="absolute top-6 right-6 p-2 rounded-full hover:bg-stone-200 dark:hover:bg-stone-800 text-stone-500 transition-colors" aria-label="Close reader">
         <i data-lucide="x" class="w-5 h-5"></i>
       </button>
 
@@ -604,13 +607,14 @@
       <!-- Full Body HTML -->
       <div id="modal-content" class="prose dark:prose-invert max-w-none text-stone-800 dark:text-stone-200 text-sm sm:text-base leading-relaxed"></div>
 
-      <!-- Footer of Modal -->
+      <!-- Footer of Modal with Anchor Tag Download (NO SVG) -->
       <div class="mt-8 pt-6 border-t border-stone-200 dark:border-stone-800 flex items-center justify-between">
-        <button class="btn-download-bio-pdf inline-flex items-center gap-2 text-xs font-bold text-emerald-600 dark:text-emerald-400 hover:underline">
-          <i data-lucide="file-down" class="w-4 h-4"></i>
-          <span>Download Bio & Patents PDF</span>
-        </button>
-        <button onclick="document.getElementById('article-modal').classList.add('hidden'); document.body.style.overflow='';" class="px-4 py-2 rounded-xl bg-stone-900 text-white dark:bg-white dark:text-stone-900 text-xs font-bold">
+        <!-- Anchor Download (NO SVG) -->
+        <a href="<?= base_url('download-bio-pdf') ?>" download="LogicIndia_Tech_Innovation_Bio_2026.pdf" id="gtm-modal-download-bio" data-gtm-category="downloads" data-gtm-action="click" data-gtm-label="Modal Download Bio PDF" class="text-xs font-bold text-emerald-600 dark:text-emerald-400 hover:underline">
+          Download Bio & Patents PDF
+        </a>
+
+        <button id="gtm-modal-close-btn" data-gtm-category="modal" data-gtm-action="click" data-gtm-label="Modal Bottom Close Button" onclick="document.getElementById('article-modal').classList.add('hidden'); document.body.style.overflow='';" class="px-4 py-2 rounded-xl bg-stone-900 text-white dark:bg-white dark:text-stone-900 text-xs font-bold">
           Close Dispatch
         </button>
       </div>
@@ -624,7 +628,7 @@
     <div class="relative w-full max-w-lg bg-[#FAF8F5] dark:bg-[#141418] rounded-3xl border border-stone-200 dark:border-stone-800 shadow-2xl p-6 sm:p-8 my-8">
       
       <!-- Close button -->
-      <button id="close-contact-modal" class="absolute top-6 right-6 p-2 rounded-full hover:bg-stone-200 dark:hover:bg-stone-800 text-stone-500 transition-colors" aria-label="Close inquiry">
+      <button id="close-contact-modal" data-gtm-category="modal" data-gtm-action="click" data-gtm-label="Close Contact Modal" class="absolute top-6 right-6 p-2 rounded-full hover:bg-stone-200 dark:hover:bg-stone-800 text-stone-500 transition-colors" aria-label="Close inquiry">
         <i data-lucide="x" class="w-5 h-5"></i>
       </button>
 
@@ -634,25 +638,25 @@
         <p class="text-stone-500 text-xs mt-1">Direct channel to research directors in Bengaluru and Hyderabad.</p>
       </div>
 
-      <form id="contact-inquiry-form" class="space-y-4">
+      <form id="contact-inquiry-form" data-gtm-category="lead" data-gtm-action="submit" data-gtm-label="Contact Modal Inquiry Form" class="space-y-4">
         <div>
           <label class="block text-xs font-mono text-stone-500 mb-1">Your Full Name *</label>
-          <input type="text" name="name" required placeholder="e.g. Dr. Raghav Rao" class="w-full px-3.5 py-2.5 rounded-xl bg-white dark:bg-stone-900 border border-stone-300 dark:border-stone-700 text-stone-900 dark:text-white text-sm focus:outline-none focus:border-emerald-500">
+          <input type="text" name="name" id="gtm-contact-name" required placeholder="e.g. Dr. Raghav Rao" class="w-full px-3.5 py-2.5 rounded-xl bg-white dark:bg-stone-900 border border-stone-300 dark:border-stone-700 text-stone-900 dark:text-white text-sm focus:outline-none focus:border-emerald-500">
         </div>
 
         <div>
           <label class="block text-xs font-mono text-stone-500 mb-1">Professional / Academic Email *</label>
-          <input type="email" name="email" required placeholder="name@institution.com" class="w-full px-3.5 py-2.5 rounded-xl bg-white dark:bg-stone-900 border border-stone-300 dark:border-stone-700 text-stone-900 dark:text-white text-sm focus:outline-none focus:border-emerald-500">
+          <input type="email" name="email" id="gtm-contact-email" required placeholder="name@institution.com" class="w-full px-3.5 py-2.5 rounded-xl bg-white dark:bg-stone-900 border border-stone-300 dark:border-stone-700 text-stone-900 dark:text-white text-sm focus:outline-none focus:border-emerald-500">
         </div>
 
         <div class="grid grid-cols-2 gap-3">
           <div>
             <label class="block text-xs font-mono text-stone-500 mb-1">Organization</label>
-            <input type="text" name="organization" placeholder="Lab / Enterprise" class="w-full px-3.5 py-2.5 rounded-xl bg-white dark:bg-stone-900 border border-stone-300 dark:border-stone-700 text-stone-900 dark:text-white text-sm focus:outline-none focus:border-emerald-500">
+            <input type="text" name="organization" id="gtm-contact-org" placeholder="Lab / Enterprise" class="w-full px-3.5 py-2.5 rounded-xl bg-white dark:bg-stone-900 border border-stone-300 dark:border-stone-700 text-stone-900 dark:text-white text-sm focus:outline-none focus:border-emerald-500">
           </div>
           <div>
             <label class="block text-xs font-mono text-stone-500 mb-1">Topic</label>
-            <select name="topic" class="w-full px-3.5 py-2.5 rounded-xl bg-white dark:bg-stone-900 border border-stone-300 dark:border-stone-700 text-stone-900 dark:text-white text-sm focus:outline-none focus:border-emerald-500">
+            <select name="topic" id="gtm-contact-topic" class="w-full px-3.5 py-2.5 rounded-xl bg-white dark:bg-stone-900 border border-stone-300 dark:border-stone-700 text-stone-900 dark:text-white text-sm focus:outline-none focus:border-emerald-500">
               <option value="Haptics Research">Haptics Research</option>
               <option value="Developer Kit Early Access">DevKit Early Access</option>
               <option value="Press / Analyst Briefing">Press & Analyst</option>
@@ -664,10 +668,10 @@
 
         <div>
           <label class="block text-xs font-mono text-stone-500 mb-1">Message / Collaboration Scope *</label>
-          <textarea name="message" rows="3" required placeholder="Describe your question, partnership proposal, or test requirements..." class="w-full px-3.5 py-2.5 rounded-xl bg-white dark:bg-stone-900 border border-stone-300 dark:border-stone-700 text-stone-900 dark:text-white text-sm focus:outline-none focus:border-emerald-500"></textarea>
+          <textarea name="message" id="gtm-contact-msg" rows="3" required placeholder="Describe your question, partnership proposal, or test requirements..." class="w-full px-3.5 py-2.5 rounded-xl bg-white dark:bg-stone-900 border border-stone-300 dark:border-stone-700 text-stone-900 dark:text-white text-sm focus:outline-none focus:border-emerald-500"></textarea>
         </div>
 
-        <button type="submit" class="w-full py-3.5 rounded-xl bg-stone-900 text-white dark:bg-white dark:text-stone-900 font-bold text-sm hover:bg-stone-800 dark:hover:bg-stone-100 transition-all shadow-md">
+        <button type="submit" id="gtm-contact-submit-btn" data-gtm-category="lead" data-gtm-action="click" data-gtm-label="Submit Contact Inquiry" class="w-full py-3.5 rounded-xl bg-stone-900 text-white dark:bg-white dark:text-stone-900 font-bold text-sm hover:bg-stone-800 dark:hover:bg-stone-100 transition-all shadow-md">
           Transmit Inquiry to ATG
         </button>
       </form>

@@ -1,7 +1,28 @@
 /**
- * logicindia.tech - Interactive Editorial Landing Page Logic (CodeIgniter 4 Integrated)
- * Medium-inspired interactions, countdown, PDF Bio generation, claps, audio, and CI4 API connectivity.
+ * logicindia.tech - Interactive Editorial Landing Page Logic
+ * Integrated with CodeIgniter 4, Dompdf anchor downloads, and Comprehensive Google Tag Manager (GTM) Analytics.
  */
+
+// Initialize GTM dataLayer
+window.dataLayer = window.dataLayer || [];
+
+/**
+ * Helper to push structured custom events to Google Tag Manager
+ */
+function pushGtmEvent(eventName, params = {}) {
+  const eventPayload = {
+    event: eventName,
+    timestamp: new Date().toISOString(),
+    page_location: window.location.href,
+    page_path: window.location.pathname,
+    ...params
+  };
+  window.dataLayer.push(eventPayload);
+  // Log in console for development inspection
+  if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") {
+    console.log("[GTM dataLayer]", eventPayload);
+  }
+}
 
 // Data for Tech Dispatches (Medium style stories)
 const TECH_DISPATCHES = {
@@ -133,17 +154,19 @@ document.addEventListener("DOMContentLoaded", () => {
   initClapSystem();
   initBookmarkSystem();
   initAudioPlayer();
-  initNewsletterCI4();
+  initNewsletterRedirectGTM();
   initContactFormCI4();
   initModalDispatch();
-  initPdfBioGenerator();
+  initDownloadAnchorGTM();
+  initScrollDepthGTM();
+  initGenericClickTrackingGTM();
 });
 
 /* ==========================================================================
-   1. Theme Management (Dark / Light)
+   1. Theme Management (Dark / Light) with GTM Tracking
    ========================================================================== */
 function initTheme() {
-  const toggleBtn = document.getElementById("theme-toggle");
+  const toggleBtn = document.getElementById("gtm-theme-toggle");
   const storedTheme = localStorage.getItem("logicindia_theme");
 
   if (storedTheme === "dark" || (!storedTheme && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
@@ -157,6 +180,10 @@ function initTheme() {
       const isDark = document.documentElement.classList.toggle("dark");
       localStorage.setItem("logicindia_theme", isDark ? "dark" : "light");
       showToast(isDark ? "Switched to Obsidian Night reading mode" : "Switched to Paper Editorial reading mode", "moon");
+
+      pushGtmEvent("theme_toggle", {
+        theme_selected: isDark ? "dark" : "light"
+      });
     });
   }
 }
@@ -203,7 +230,7 @@ function initCountdown() {
 
     const days = Math.floor(distance / (1000 * 60 * 60 * 24));
     const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    const mins = Math.floor((distance % (1000 * 60)) / (1000 * 60));
+    const mins = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
     const secs = Math.floor((distance % (1000 * 60)) / 1000);
 
     if (daysEl) daysEl.innerText = String(days).padStart(2, "0");
@@ -217,7 +244,7 @@ function initCountdown() {
 }
 
 /* ==========================================================================
-   4. Medium-style Clapping Interaction
+   4. Medium-style Clapping with GTM Tracking
    ========================================================================== */
 function initClapSystem() {
   const clapBtns = document.querySelectorAll(".btn-clap");
@@ -244,6 +271,13 @@ function initClapSystem() {
       localStorage.setItem("logicindia_total_claps", globalClapCount);
       refreshDisplays();
 
+      // GTM Tracking for Claps & Milestones
+      pushGtmEvent("story_clap", {
+        user_clap_count: userClapCount,
+        global_clap_count: globalClapCount,
+        is_milestone: [1, 5, 10, 25, 50].includes(userClapCount)
+      });
+
       // Spawn floating +1 bubble
       const bubble = document.createElement("span");
       bubble.className = "clap-bubble";
@@ -267,7 +301,7 @@ function initClapSystem() {
 }
 
 /* ==========================================================================
-   5. Bookmark & Share System
+   5. Bookmark & Share with GTM Tracking
    ========================================================================== */
 function initBookmarkSystem() {
   const bookmarkBtns = document.querySelectorAll(".btn-bookmark");
@@ -292,6 +326,11 @@ function initBookmarkSystem() {
       localStorage.setItem("logicindia_bookmarked", isBookmarked);
       updateUi();
       showToast(isBookmarked ? "Story saved to your reading list" : "Story removed from reading list", "bookmark");
+
+      pushGtmEvent("story_bookmark", {
+        action: isBookmarked ? "save" : "unsave",
+        story_title: "The Next Era of Human-Computer Symbiosis is Arriving"
+      });
     });
   });
 
@@ -304,12 +343,17 @@ function initBookmarkSystem() {
       } else {
         showToast("Link: " + window.location.href, "share-2");
       }
+
+      pushGtmEvent("story_share", {
+        method: "clipboard",
+        share_url: window.location.href
+      });
     });
   });
 }
 
 /* ==========================================================================
-   6. Audio Player Simulation (Medium "Listen to story")
+   6. Audio Player Simulation with GTM Tracking
    ========================================================================== */
 function initAudioPlayer() {
   const playBtn = document.getElementById("audio-play-toggle");
@@ -349,20 +393,30 @@ function initAudioPlayer() {
           if (timeDisplay) timeDisplay.textContent = `${formatTime(currentSec)} / ${formatTime(totalSec)}`;
         }, 1000);
         showToast("Playing audio narration: logicindia.tech Frontier Briefing", "volume-2");
+
+        pushGtmEvent("audio_narration_play", {
+          audio_title: "logicindia.tech Frontier Briefing",
+          current_timestamp: currentSec
+        });
       } else {
         if (playIcon) playIcon.classList.remove("hidden");
         if (pauseIcon) pauseIcon.classList.add("hidden");
         waveBars.forEach(b => b.classList.remove("sound-bar"));
         clearInterval(timer);
+
+        pushGtmEvent("audio_narration_pause", {
+          audio_title: "logicindia.tech Frontier Briefing",
+          current_timestamp: currentSec
+        });
       }
     });
   }
 }
 
 /* ==========================================================================
-   7. Newsletter Subscription with CodeIgniter 4 AJAX API
+   7. Newsletter Subscription with Redirect to Dedicated Page + GTM
    ========================================================================== */
-function initNewsletterCI4() {
+function initNewsletterRedirectGTM() {
   const forms = [
     document.getElementById("hero-newsletter-form"),
     document.getElementById("footer-newsletter-form")
@@ -370,65 +424,59 @@ function initNewsletterCI4() {
 
   forms.forEach(form => {
     if (!form) return;
-    form.addEventListener("submit", async (e) => {
-      e.preventDefault();
+    form.addEventListener("submit", (e) => {
       const input = form.querySelector("input[type='email']");
-      const submitBtn = form.querySelector("button[type='submit']");
       const email = input ? input.value.trim() : "";
 
       if (!email || !email.includes("@") || !email.includes(".")) {
+        e.preventDefault();
         showToast("Please enter a valid email address.", "alert-circle");
         return;
       }
 
-      if (submitBtn) {
-        submitBtn.disabled = true;
-        submitBtn.innerHTML = `<span class="inline-block animate-spin mr-2">⟳</span> Connecting...`;
-      }
+      // Track GTM Event before redirecting
+      pushGtmEvent("newsletter_form_submit", {
+        form_id: form.id,
+        form_location: form.id.includes("hero") ? "hero_unveil" : "footer_section",
+        email_domain: email.split("@")[1] || "unknown"
+      });
 
-      try {
-        const formData = new FormData();
-        formData.append("email", email);
-
-        // CodeIgniter 4 API call
-        const response = await fetch("api/subscribe", {
-          method: "POST",
-          body: formData
-        });
-
-        const data = await response.json();
-
-        if (response.ok && data.status === "success") {
-          if (input) input.value = "";
-          if (submitBtn) {
-            submitBtn.disabled = false;
-            submitBtn.innerHTML = `✓ Subscribed`;
-            submitBtn.classList.remove("bg-stone-900", "dark:bg-white");
-            submitBtn.classList.add("bg-emerald-600", "text-white");
-          }
-          showToast(data.message, "check-circle");
-        } else {
-          showToast(data.message || "Subscription error. Please retry.", "alert-triangle");
-          if (submitBtn) {
-            submitBtn.disabled = false;
-            submitBtn.innerHTML = "Subscribe";
-          }
-        }
-      } catch (err) {
-        // Fallback for offline / static
-        showToast("Welcome aboard! You have joined 45,800+ pioneers receiving the logicindia.tech Dispatch.", "check-circle");
-        if (input) input.value = "";
-        if (submitBtn) {
-          submitBtn.disabled = false;
-          submitBtn.innerHTML = `✓ Subscribed`;
-        }
-      }
+      // Let the native form submit or forward to subscribe route
+      // Form action points directly to /subscribe which sets session & redirects to /subscribed
     });
   });
 }
 
 /* ==========================================================================
-   8. Contact Form & Inquiry Modal with CodeIgniter 4 AJAX API
+   8. Download Anchor Tag Tracking (NO SVG, Native Download with GTM)
+   ========================================================================== */
+function initDownloadAnchorGTM() {
+  // Select all anchor tags configured for PDF download
+  const downloadAnchors = document.querySelectorAll("a[download], a[href*='download-bio-pdf']");
+
+  downloadAnchors.forEach(anchor => {
+    anchor.addEventListener("click", (e) => {
+      const fileName = anchor.getAttribute("download") || "LogicIndia_Tech_Innovation_Bio_2026.pdf";
+      const linkId = anchor.id || "unspecified_download_anchor";
+      const linkLabel = anchor.getAttribute("data-gtm-label") || anchor.textContent.trim();
+
+      // Push GTM Download Event
+      pushGtmEvent("file_download", {
+        file_name: fileName,
+        file_extension: "pdf",
+        link_id: linkId,
+        link_text: anchor.textContent.trim(),
+        link_url: anchor.href,
+        download_location: anchor.getAttribute("data-gtm-label") || "page"
+      });
+
+      showToast("Downloading official logicindia.tech Innovation Bio PDF...", "check");
+    });
+  });
+}
+
+/* ==========================================================================
+   9. Contact Form & Inquiry Modal with GTM Tracking
    ========================================================================== */
 function initContactFormCI4() {
   const contactForm = document.getElementById("contact-inquiry-form");
@@ -440,6 +488,9 @@ function initContactFormCI4() {
     if (contactModal) {
       contactModal.classList.remove("hidden");
       document.body.style.overflow = "hidden";
+      pushGtmEvent("contact_modal_open", {
+        trigger_location: "user_action"
+      });
     }
   }
 
@@ -447,6 +498,7 @@ function initContactFormCI4() {
     if (contactModal) {
       contactModal.classList.add("hidden");
       document.body.style.overflow = "";
+      pushGtmEvent("contact_modal_close", {});
     }
   }
 
@@ -468,10 +520,17 @@ function initContactFormCI4() {
         submitBtn.innerHTML = `<span class="inline-block animate-spin mr-2">⟳</span> Transmitting to ATG...`;
       }
 
-      try {
-        const formData = new FormData(contactForm);
+      const formData = new FormData(contactForm);
+      const topic = formData.get("topic") || "General";
+      const organization = formData.get("organization") || "Independent";
 
-        // CodeIgniter 4 API call
+      // Push GTM Lead Event
+      pushGtmEvent("contact_form_submit", {
+        inquiry_topic: topic,
+        inquiry_organization: organization
+      });
+
+      try {
         const response = await fetch("api/contact", {
           method: "POST",
           body: formData
@@ -487,6 +546,10 @@ function initContactFormCI4() {
           }
           closeModal();
           showToast(data.message, "send");
+
+          pushGtmEvent("contact_form_success", {
+            inquiry_topic: topic
+          });
         } else {
           showToast(data.message || "Failed to submit inquiry.", "alert-triangle");
           if (submitBtn) {
@@ -495,7 +558,6 @@ function initContactFormCI4() {
           }
         }
       } catch (err) {
-        // Graceful fallback
         contactForm.reset();
         if (submitBtn) {
           submitBtn.disabled = false;
@@ -509,8 +571,10 @@ function initContactFormCI4() {
 }
 
 /* ==========================================================================
-   9. Interactive Dispatch Reader Modal
+   10. Interactive Dispatch Reader Modal with GTM Tracking
    ========================================================================== */
+let storyOpenTime = null;
+
 function initModalDispatch() {
   const modal = document.getElementById("article-modal");
   const closeBtn = document.getElementById("close-article-modal");
@@ -519,6 +583,8 @@ function initModalDispatch() {
   function openArticle(key) {
     const data = TECH_DISPATCHES[key];
     if (!data || !modal) return;
+
+    storyOpenTime = Date.now();
 
     document.getElementById("modal-category").textContent = data.category;
     document.getElementById("modal-read-time").textContent = data.readTime;
@@ -539,12 +605,27 @@ function initModalDispatch() {
 
     modal.classList.remove("hidden");
     document.body.style.overflow = "hidden";
+
+    // Push GTM Story Open Event
+    pushGtmEvent("story_read_open", {
+      story_id: key,
+      story_title: data.title,
+      story_category: data.category,
+      story_read_time: data.readTime,
+      story_author: data.author
+    });
   }
 
   function closeArticle() {
     if (modal) {
+      const readSeconds = storyOpenTime ? Math.round((Date.now() - storyOpenTime) / 1000) : 0;
       modal.classList.add("hidden");
       document.body.style.overflow = "";
+
+      pushGtmEvent("story_read_close", {
+        time_spent_seconds: readSeconds
+      });
+      storyOpenTime = null;
     }
   }
 
@@ -564,172 +645,50 @@ function initModalDispatch() {
 }
 
 /* ==========================================================================
-   10. PDF Bio & Whitepaper Generator (Real Downloadable Executive PDF)
+   11. Scroll Depth Threshold Tracking for GTM (25%, 50%, 75%, 90%, 100%)
    ========================================================================== */
-function initPdfBioGenerator() {
-  const downloadBtns = document.querySelectorAll(".btn-download-bio-pdf");
+function initScrollDepthGTM() {
+  const trackedThresholds = new Set();
+  const milestones = [25, 50, 75, 90, 100];
 
-  downloadBtns.forEach(btn => {
-    btn.addEventListener("click", (e) => {
-      e.preventDefault();
+  window.addEventListener("scroll", () => {
+    const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
+    if (totalHeight <= 0) return;
+    const currentPercent = Math.round((window.scrollY / totalHeight) * 100);
 
-      if (!window.jspdf || !window.jspdf.jsPDF) {
-        // Fallback to server route
-        window.open("download-bio", "_blank");
-        return;
-      }
-
-      showToast("Generating official logicindia.tech Bio & Whitepaper PDF...", "download");
-
-      try {
-        const { jsPDF } = window.jspdf;
-        const doc = new jsPDF({
-          orientation: "portrait",
-          unit: "mm",
-          format: "a4"
+    milestones.forEach(threshold => {
+      if (currentPercent >= threshold && !trackedThresholds.has(threshold)) {
+        trackedThresholds.add(threshold);
+        pushGtmEvent("scroll_depth", {
+          scroll_percentage: threshold
         });
-
-        // Palette
-        const primaryColor = [18, 18, 18];
-        const emeraldAccent = [0, 184, 120];
-        const stoneGray = [115, 115, 115];
-        const lightBg = [248, 247, 244];
-
-        // --- PAGE 1: Corporate & Innovation Bio ---
-        // Header Banner
-        doc.setFillColor(...primaryColor);
-        doc.rect(0, 0, 210, 36, "F");
-
-        doc.setFillColor(...emeraldAccent);
-        doc.rect(0, 36, 210, 2, "F");
-
-        // Brand Title
-        doc.setTextColor(255, 255, 255);
-        doc.setFont("helvetica", "bold");
-        doc.setFontSize(22);
-        doc.text("LOGICINDIA.TECH", 20, 22);
-
-        doc.setFontSize(10);
-        doc.setFont("helvetica", "normal");
-        doc.setTextColor(200, 200, 200);
-        doc.text("ADVANCED TECHNOLOGY GROUP · EXECUTIVE PROFILE & RESEARCH BRIEFING", 20, 30);
-
-        // Date & Document Number
-        doc.setFontSize(8);
-        doc.text("DOC-ID: LOGICINDIA-ATG-2026", 150, 22);
-        doc.text("OCTOBER 2026 EDITION", 150, 28);
-
-        // Executive Summary
-        doc.setTextColor(...primaryColor);
-        doc.setFontSize(16);
-        doc.setFont("helvetica", "bold");
-        doc.text("1. Executive Summary & Frontier Charter", 20, 52);
-
-        doc.setFontSize(10);
-        doc.setFont("helvetica", "normal");
-        doc.setTextColor(60, 60, 60);
-        const execSummary = 
-          "logicindia.tech was established to engineer the future of high-bandwidth human-machine interaction, physical computing peripherals, and indigenous deep-tech hardware systems from India to the global frontier.\n\n" +
-          "Our research labs operate across Bengaluru, Hyderabad, and Pune, focusing on three technological breakthroughs: dynamic micro-fluidic tactile actuation, zero-latency optical telemetry, and circular bio-composite materials engineered to make computational hardware a carbon-negative asset.";
-        
-        const splitSummary = doc.splitTextToSize(execSummary, 170);
-        doc.text(splitSummary, 20, 60);
-
-        // Key Metrics Box
-        doc.setFillColor(...lightBg);
-        doc.roundedRect(20, 88, 170, 32, 2, 2, "F");
-
-        doc.setFontSize(9);
-        doc.setFont("helvetica", "bold");
-        doc.setTextColor(...primaryColor);
-        doc.text("NATIONAL R&D RESEARCH CAMPUS FOOTPRINT", 26, 96);
-
-        doc.setFont("helvetica", "normal");
-        doc.setFontSize(8);
-        doc.setTextColor(...stoneGray);
-        doc.text("• Bengaluru Advanced Computing & Haptics Center: Electronic City Phase 1, Bengaluru", 26, 103);
-        doc.text("• Hyderabad Semiconductor & Optical Telemetry Campus: HITEC City, Hyderabad", 26, 109);
-        doc.text("• Pune Materials & Circular Hardware Design Hub: Hinjawadi Tech Park, Pune", 26, 115);
-
-        // Core Ongoing Technologies Table
-        doc.setFontSize(14);
-        doc.setFont("helvetica", "bold");
-        doc.setTextColor(...primaryColor);
-        doc.text("2. Ongoing Core Technologies (Under Active Prototyping)", 20, 134);
-
-        const techItems = [
-          {
-            title: "Micro-Fluidic Actuation (Haptics 2.0)",
-            desc: "Sub-millisecond tactile texture switching dynamically tuning keystroke actuation from 35g to 85g."
-          },
-          {
-            title: "Quantum-Sync Optical Telemetry",
-            desc: "16,000 Hz optical pulse synchronization directly into ambient monitor sensors with sub-0.1ms delay."
-          },
-          {
-            title: "Forged Ocean Carbon Composites",
-            desc: "Chassis architecture utilizing marine algal binders and recovered carbon fibers (-140g net CO2e balance)."
-          },
-          {
-            title: "On-Peripheral 1.2W Neural Engine",
-            desc: "Ultra-low power edge NPU running local biomechanical prediction models without cloud data dependency."
-          }
-        ];
-
-        let yPos = 144;
-        techItems.forEach((item, index) => {
-          doc.setFillColor(...emeraldAccent);
-          doc.circle(23, yPos - 1.5, 1.5, "F");
-
-          doc.setFontSize(10);
-          doc.setFont("helvetica", "bold");
-          doc.setTextColor(...primaryColor);
-          doc.text(item.title, 28, yPos);
-
-          doc.setFontSize(9);
-          doc.setFont("helvetica", "normal");
-          doc.setTextColor(80, 80, 80);
-          const splitDesc = doc.splitTextToSize(item.desc, 160);
-          doc.text(splitDesc, 28, yPos + 5);
-
-          yPos += 16;
-        });
-
-        // Contact & Official Verification
-        doc.setFontSize(14);
-        doc.setFont("helvetica", "bold");
-        doc.setTextColor(...primaryColor);
-        doc.text("3. Official Verification & Contact Coordinates", 20, 222);
-
-        doc.setFontSize(9);
-        doc.setFont("helvetica", "normal");
-        doc.setTextColor(70, 70, 70);
-        doc.text("Advanced Inquiries: innovations@logicindia.tech", 20, 230);
-        doc.text("Press & Analyst Relations: press@logicindia.tech", 20, 236);
-        doc.text("Official Portal: https://logicindia.tech · Bengaluru & Hyderabad, India", 20, 242);
-
-        // Sign-off signature line
-        doc.setDrawColor(200, 200, 200);
-        doc.line(20, 258, 190, 258);
-
-        doc.setFontSize(8);
-        doc.setTextColor(...stoneGray);
-        doc.text("Authorized by logicindia.tech Advanced Technology Group (ATG) · Certified Authentic 2026", 20, 265);
-        doc.text("Page 1 of 1 · Public Innovation Briefing", 145, 265);
-
-        // Download the PDF
-        doc.save("LogicIndia_Tech_Innovation_Bio_2026.pdf");
-        showToast("logicindia.tech Innovation Bio PDF downloaded successfully!", "check");
-      } catch (err) {
-        console.error(err);
-        window.open("download-bio", "_blank");
       }
+    });
+  }, { passive: true });
+}
+
+/* ==========================================================================
+   12. Generic Click Tracking for all elements with data-gtm attributes
+   ========================================================================== */
+function initGenericClickTrackingGTM() {
+  document.addEventListener("click", (e) => {
+    const target = e.target.closest("[data-gtm-category]");
+    if (!target) return;
+
+    // Avoid double firing if specific handler already handled it
+    if (target.hasAttribute("download") || target.id === "gtm-btn-clap") return;
+
+    pushGtmEvent("ui_interaction", {
+      gtm_category: target.getAttribute("data-gtm-category"),
+      gtm_action: target.getAttribute("data-gtm-action") || "click",
+      gtm_label: target.getAttribute("data-gtm-label") || target.id || target.textContent.trim(),
+      element_id: target.id || "unspecified"
     });
   });
 }
 
 /* ==========================================================================
-   11. Toast Notification Utility
+   13. Toast Notification Utility
    ========================================================================== */
 function showToast(message, iconName = "info") {
   const container = document.getElementById("toast-container");
