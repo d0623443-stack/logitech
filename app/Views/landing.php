@@ -18,6 +18,11 @@
   <!-- Favicon SVG -->
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2300E59B' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='10'/><path d='m8 12 3 3 5-5'/></svg>">
 
+  <!-- Uniform Base URL Global Definition -->
+  <script>
+    window.BASE_URL = "<?= base_url() ?>";
+  </script>
+
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -79,11 +84,11 @@
 
       <!-- Center Nav Links -->
       <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-stone-600 dark:text-stone-400">
-        <a href="#unveil" id="gtm-nav-unveil" data-gtm-category="navigation" data-gtm-action="click" data-gtm-label="The Unveil" class="hover:text-stone-950 dark:hover:text-white transition-colors">The Unveil</a>
-        <a href="#ongoing-tech" id="gtm-nav-tech" data-gtm-category="navigation" data-gtm-action="click" data-gtm-label="Ongoing Tech" class="hover:text-stone-950 dark:hover:text-white transition-colors">Ongoing Tech</a>
-        <a href="#bio-whitepaper" id="gtm-nav-bio" data-gtm-category="navigation" data-gtm-action="click" data-gtm-label="Bio and R&D" class="hover:text-stone-950 dark:hover:text-white transition-colors">Bio & R&D</a>
+        <a href="<?= base_url('#unveil') ?>" id="gtm-nav-unveil" data-gtm-category="navigation" data-gtm-action="click" data-gtm-label="The Unveil" class="hover:text-stone-950 dark:hover:text-white transition-colors">The Unveil</a>
+        <a href="<?= base_url('#ongoing-tech') ?>" id="gtm-nav-tech" data-gtm-category="navigation" data-gtm-action="click" data-gtm-label="Ongoing Tech" class="hover:text-stone-950 dark:hover:text-white transition-colors">Ongoing Tech</a>
+        <a href="<?= base_url('#bio-whitepaper') ?>" id="gtm-nav-bio" data-gtm-category="navigation" data-gtm-action="click" data-gtm-label="Bio and R&D" class="hover:text-stone-950 dark:hover:text-white transition-colors">Bio & R&D</a>
         <a href="<?= base_url('subscribe') ?>" id="gtm-nav-newsletter-link" data-gtm-category="navigation" data-gtm-action="click" data-gtm-label="Newsletter Page" class="hover:text-stone-950 dark:hover:text-white transition-colors">Dispatch</a>
-        <a href="#laboratories" id="gtm-nav-labs" data-gtm-category="navigation" data-gtm-action="click" data-gtm-label="R&D Labs" class="hover:text-stone-950 dark:hover:text-white transition-colors">R&D Labs</a>
+        <a href="<?= base_url('#laboratories') ?>" id="gtm-nav-labs" data-gtm-category="navigation" data-gtm-action="click" data-gtm-label="R&D Labs" class="hover:text-stone-950 dark:hover:text-white transition-colors">R&D Labs</a>
       </nav>
 
       <!-- Action Cluster -->
@@ -539,9 +544,9 @@
         </div>
 
         <div class="flex flex-wrap items-center gap-6 text-xs text-stone-500 dark:text-stone-400">
-          <a href="#unveil" id="gtm-footer-unveil" data-gtm-category="navigation" data-gtm-action="click" data-gtm-label="Footer Unveil" class="hover:underline">The Unveil</a>
-          <a href="#ongoing-tech" id="gtm-footer-tech" data-gtm-category="navigation" data-gtm-action="click" data-gtm-label="Footer Tech" class="hover:underline">Research Papers</a>
-          <a href="#bio-whitepaper" id="gtm-footer-bio" data-gtm-category="navigation" data-gtm-action="click" data-gtm-label="Footer Bio" class="hover:underline">Corporate Bio</a>
+          <a href="<?= base_url('#unveil') ?>" id="gtm-footer-unveil" data-gtm-category="navigation" data-gtm-action="click" data-gtm-label="Footer Unveil" class="hover:underline">The Unveil</a>
+          <a href="<?= base_url('#ongoing-tech') ?>" id="gtm-footer-tech" data-gtm-category="navigation" data-gtm-action="click" data-gtm-label="Footer Tech" class="hover:underline">Research Papers</a>
+          <a href="<?= base_url('#bio-whitepaper') ?>" id="gtm-footer-bio" data-gtm-category="navigation" data-gtm-action="click" data-gtm-label="Footer Bio" class="hover:underline">Corporate Bio</a>
           
           <!-- Download Bio PDF Anchor Tag (NO SVG) -->
           <a href="<?= base_url('download-bio-pdf') ?>" download="LogicIndia_Tech_Innovation_Bio_2026.pdf" id="gtm-footer-download-bio" data-gtm-category="downloads" data-gtm-action="click" data-gtm-label="Footer Download Bio PDF" class="hover:underline text-stone-700 dark:text-stone-300 font-semibold">
@@ -549,7 +554,7 @@
           </a>
 
           <a href="<?= base_url('subscribe') ?>" id="gtm-footer-subscribe-link" data-gtm-category="navigation" data-gtm-action="click" data-gtm-label="Footer Subscribe Page" class="hover:underline">Subscribe Page</a>
-          <a href="#laboratories" id="gtm-footer-locations" data-gtm-category="navigation" data-gtm-action="click" data-gtm-label="Footer Locations" class="hover:underline">Locations</a>
+          <a href="<?= base_url('#laboratories') ?>" id="gtm-footer-locations" data-gtm-category="navigation" data-gtm-action="click" data-gtm-label="Footer Locations" class="hover:underline">Locations</a>
           <button id="gtm-footer-contact" data-gtm-category="lead" data-gtm-action="click" data-gtm-label="Footer Contact ATG" class="btn-open-contact hover:underline text-emerald-600 dark:text-emerald-400">Contact ATG</button>
         </div>
 

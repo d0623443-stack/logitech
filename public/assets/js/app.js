@@ -7,6 +7,14 @@
 window.dataLayer = window.dataLayer || [];
 
 /**
+ * Base URL helper to ensure uniform endpoint resolution
+ */
+function getBaseUrl() {
+  const base = window.BASE_URL || (window.location.origin + "/logitech/");
+  return base.endsWith("/") ? base : base + "/";
+}
+
+/**
  * Helper to push structured custom events to Google Tag Manager
  */
 function pushGtmEvent(eventName, params = {}) {
@@ -160,7 +168,31 @@ document.addEventListener("DOMContentLoaded", () => {
   initDownloadAnchorGTM();
   initScrollDepthGTM();
   initGenericClickTrackingGTM();
+  initSmoothScroll();
 });
+
+/**
+ * Smooth scrolling for uniform base_url hash links
+ */
+function initSmoothScroll() {
+  document.querySelectorAll('a[href*="#"]').forEach(anchor => {
+    anchor.addEventListener("click", function(e) {
+      try {
+        const targetUrl = new URL(this.href, window.location.href);
+        if (targetUrl.pathname === window.location.pathname && targetUrl.hash) {
+          const targetEl = document.querySelector(targetUrl.hash);
+          if (targetEl) {
+            e.preventDefault();
+            targetEl.scrollIntoView({ behavior: "smooth" });
+            history.pushState(null, null, targetUrl.hash);
+          }
+        }
+      } catch (err) {
+        // Allow default browser behavior
+      }
+    });
+  });
+}
 
 /* ==========================================================================
    1. Theme Management (Dark / Light) with GTM Tracking
@@ -531,7 +563,7 @@ function initContactFormCI4() {
       });
 
       try {
-        const response = await fetch("api/contact", {
+        const response = await fetch(getBaseUrl() + "api/contact", {
           method: "POST",
           body: formData
         });
@@ -596,7 +628,9 @@ function initModalDispatch() {
 
     const imgEl = document.getElementById("modal-image");
     if (imgEl && data.image) {
-      imgEl.src = data.image;
+      imgEl.src = data.image.startsWith("http") || data.image.startsWith("/")
+        ? data.image
+        : getBaseUrl() + data.image;
       imgEl.alt = data.title;
       imgEl.classList.remove("hidden");
     } else if (imgEl) {
