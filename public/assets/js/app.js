@@ -166,6 +166,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initContactFormCI4();
   initModalDispatch();
   initDownloadAnchorGTM();
+  initOutboundLinkTrackingGTM();
   initScrollDepthGTM();
   initGenericClickTrackingGTM();
   initSmoothScroll();
@@ -508,6 +509,51 @@ function initDownloadAnchorGTM() {
 }
 
 /* ==========================================================================
+   8b. Outbound Link Tracking for Google Tag Manager (GTM & GA4)
+   ========================================================================== */
+function initOutboundLinkTrackingGTM() {
+  const outboundAnchors = document.querySelectorAll("a[data-gtm-outbound='true'], a[href*='digitalcareseo.com'], #gtm-outbound-digitalcareseo");
+
+  outboundAnchors.forEach(anchor => {
+    anchor.addEventListener("click", () => {
+      const destinationUrl = anchor.href;
+      let destinationDomain = "www.digitalcareseo.com";
+      try {
+        destinationDomain = new URL(destinationUrl).hostname;
+      } catch (err) {}
+
+      const linkId = anchor.id || "gtm-outbound-digitalcareseo";
+      const linkLabel = anchor.getAttribute("data-gtm-label") || "Digital Care SEO - Outbound Link";
+      const linkText = anchor.textContent.trim();
+
+      // 1. GA4 Standard Outbound Click Event
+      pushGtmEvent("click", {
+        outbound: true,
+        link_url: destinationUrl,
+        link_domain: destinationDomain,
+        link_id: linkId,
+        link_classes: anchor.className,
+        link_text: linkText
+      });
+
+      // 2. Custom GTM Outbound Click Event for Tag Assistant / GTM Trigger testing
+      pushGtmEvent("outbound_click", {
+        event_category: "outbound",
+        event_action: "click",
+        event_label: linkLabel,
+        outbound_url: destinationUrl,
+        outbound_domain: destinationDomain,
+        link_id: linkId,
+        link_text: linkText,
+        outbound: true
+      });
+
+      showToast(`Outbound GTM event tracked: ${destinationDomain}`, "external-link");
+    });
+  });
+}
+
+/* ==========================================================================
    9. Contact Form & Inquiry Modal with GTM Tracking
    ========================================================================== */
 function initContactFormCI4() {
@@ -710,7 +756,7 @@ function initGenericClickTrackingGTM() {
     if (!target) return;
 
     // Avoid double firing if specific handler already handled it
-    if (target.hasAttribute("download") || target.id === "gtm-btn-clap") return;
+    if (target.hasAttribute("download") || target.id === "gtm-btn-clap" || target.hasAttribute("data-gtm-outbound") || target.getAttribute("data-gtm-category") === "outbound") return;
 
     pushGtmEvent("ui_interaction", {
       gtm_category: target.getAttribute("data-gtm-category"),

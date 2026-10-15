@@ -93,6 +93,12 @@
 
       <!-- Action Cluster -->
       <div class="flex items-center gap-3">
+        <!-- Outbound Link for Google Tag Manager Testing -->
+        <a href="https://www.digitalcareseo.com/" target="_blank" rel="noopener noreferrer" id="gtm-outbound-digitalcareseo" data-gtm-category="outbound" data-gtm-action="click" data-gtm-label="Digital Care SEO - Outbound Link" data-gtm-outbound="true" class="gtm-outbound-link inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold tracking-wide border border-emerald-500/40 text-emerald-700 dark:text-emerald-300 bg-emerald-500/10 hover:bg-emerald-500/20 hover:text-emerald-900 dark:hover:text-emerald-100 transition-all shadow-sm" title="Outbound Link: Digital Care SEO (Google Tag Manager Testing)">
+          <span>Digital Care SEO</span>
+          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-3 h-3 text-emerald-600 dark:text-emerald-400"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>
+        </a>
+
         <!-- Download Bio PDF Anchor Tag (NO SVG) -->
         <a href="<?= base_url('download-bio-pdf') ?>" download="LogicIndia_Tech_Innovation_Bio_2026.pdf" id="gtm-nav-download-bio" data-gtm-category="downloads" data-gtm-action="click" data-gtm-label="Nav Download Bio PDF" class="hidden sm:inline-flex items-center px-3.5 py-1.5 rounded-full text-xs font-semibold tracking-wide border border-stone-300 dark:border-stone-700 hover:border-emerald-500 text-stone-700 dark:text-stone-300 hover:text-stone-900 dark:hover:text-white transition-all bg-white/60 dark:bg-stone-900/60 shadow-sm" title="Download Official logicindia.tech Innovation Bio PDF">
           Download Bio PDF
