@@ -13,8 +13,8 @@ $routes->post('subscribe', 'Home::processSubscribe');
 $routes->get('subscribed', 'Home::subscribedSuccess');
 
 // Download Bio PDF (Anchor tag direct download)
-$routes->get('download-bio-pdf', 'Home::downloadBioPdfFile');
-$routes->get('download-bio', 'Home::downloadBioPdf'); // HTML / Legacy fallback
+$routes->match(['get', 'head'], 'download-bio-pdf', 'Home::downloadBioPdfFile');
+$routes->match(['get', 'head'], 'download-bio', 'Home::downloadBioPdf'); // HTML / Legacy fallback
 
 // API Endpoints
 $routes->post('api/subscribe', 'Home::subscribe');

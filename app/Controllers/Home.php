@@ -88,6 +88,21 @@ class Home extends BaseController
      */
     public function downloadBioPdfFile()
     {
+        $candidatePaths = [
+            ROOTPATH . 'assets/docs/LogicIndia_Tech_Innovation_Bio_2026.pdf',
+            ROOTPATH . 'public/assets/docs/LogicIndia_Tech_Innovation_Bio_2026.pdf',
+            FCPATH . 'assets/docs/LogicIndia_Tech_Innovation_Bio_2026.pdf',
+            FCPATH . 'public/assets/docs/LogicIndia_Tech_Innovation_Bio_2026.pdf'
+        ];
+
+        foreach ($candidatePaths as $path) {
+            if (file_exists($path) && filesize($path) > 0) {
+                return $this->response->download($path, null)
+                    ->setFileName('LogicIndia_Tech_Innovation_Bio_2026.pdf')
+                    ->setHeader('Content-Type', 'application/pdf');
+            }
+        }
+
         $bio = $this->techModel->getCompanyBio();
         $labs = $this->techModel->getGlobalLabs();
         $techs = $this->techModel->getOngoingTechnologies();
@@ -191,21 +206,27 @@ class Home extends BaseController
 
             $pdfOutput = $dompdf->output();
 
-            // Save static file copy for instant caching
-            @file_put_contents(FCPATH . 'assets/docs/LogicIndia_Tech_Innovation_Bio_2026.pdf', $pdfOutput);
-            @file_put_contents(FCPATH . 'public/assets/docs/LogicIndia_Tech_Innovation_Bio_2026.pdf', $pdfOutput);
+            // Save static file copies
+            $dir1 = ROOTPATH . 'assets/docs/';
+            $dir2 = ROOTPATH . 'public/assets/docs/';
+            if (!is_dir($dir1)) { @mkdir($dir1, 0755, true); }
+            if (!is_dir($dir2)) { @mkdir($dir2, 0755, true); }
+            @file_put_contents($dir1 . 'LogicIndia_Tech_Innovation_Bio_2026.pdf', $pdfOutput);
+            @file_put_contents($dir2 . 'LogicIndia_Tech_Innovation_Bio_2026.pdf', $pdfOutput);
 
             return $this->response
                 ->setHeader('Content-Type', 'application/pdf')
                 ->setHeader('Content-Disposition', 'attachment; filename="LogicIndia_Tech_Innovation_Bio_2026.pdf"')
+                ->setHeader('Content-Length', (string) strlen($pdfOutput))
+                ->setHeader('Accept-Ranges', 'bytes')
                 ->setHeader('Cache-Control', 'private, max-age=0, must-revalidate')
                 ->setHeader('Pragma', 'public')
                 ->setBody($pdfOutput);
         } catch (\Throwable $e) {
-            // Fallback: send existing file if generated
-            $staticPath = FCPATH . 'assets/docs/LogicIndia_Tech_Innovation_Bio_2026.pdf';
-            if (file_exists($staticPath)) {
-                return $this->response->download($staticPath, null)->setFileName('LogicIndia_Tech_Innovation_Bio_2026.pdf');
+            foreach ($candidatePaths as $path) {
+                if (file_exists($path)) {
+                    return $this->response->download($path, null)->setFileName('LogicIndia_Tech_Innovation_Bio_2026.pdf');
+                }
             }
             return redirect()->to(base_url('download-bio'));
         }
