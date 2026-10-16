@@ -103,96 +103,6 @@ class Home extends BaseController
             }
         }
 
-        $bio = $this->techModel->getCompanyBio();
-        $labs = $this->techModel->getGlobalLabs();
-        $techs = $this->techModel->getOngoingTechnologies();
-
-        $html = '
-        <!DOCTYPE html>
-        <html>
-        <head>
-          <meta charset="utf-8">
-          <title>logicindia.tech — Innovation Bio 2026</title>
-          <style>
-            body { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; color: #1c1917; margin: 0; padding: 25px; line-height: 1.5; font-size: 11pt; }
-            .header { background: #0c0a09; color: #ffffff; padding: 25px 30px; border-radius: 6px; margin-bottom: 25px; border-bottom: 4px solid #00E59B; }
-            .brand { font-size: 24pt; font-weight: bold; letter-spacing: -0.5px; }
-            .brand span { color: #00E59B; }
-            .subheading { font-size: 9pt; text-transform: uppercase; letter-spacing: 1.5px; color: #a8a29e; margin-top: 4px; }
-            .doc-id { font-size: 8pt; color: #78716c; margin-top: 8px; font-family: monospace; }
-            h2 { font-size: 14pt; color: #0c0a09; border-bottom: 1px solid #e7e5e4; padding-bottom: 6px; margin-top: 22px; margin-bottom: 12px; }
-            p { margin-bottom: 12px; color: #44403c; font-size: 10pt; }
-            .stats-table { width: 100%; border-collapse: collapse; margin: 15px 0; }
-            .stats-table td { padding: 10px; background: #fafaf9; border: 1px solid #e7e5e4; text-align: center; }
-            .stats-val { font-size: 16pt; font-weight: bold; color: #0c0a09; font-family: monospace; }
-            .stats-lbl { font-size: 8pt; color: #78716c; text-transform: uppercase; margin-top: 2px; }
-            .card { background: #fafaf9; border: 1px solid #e7e5e4; border-radius: 4px; padding: 12px 14px; margin-bottom: 10px; }
-            .card-title { font-weight: bold; color: #0c0a09; font-size: 10.5pt; margin-bottom: 4px; }
-            .card-meta { font-size: 8.5pt; color: #059669; font-weight: bold; text-transform: uppercase; margin-bottom: 4px; }
-            .card-desc { font-size: 9.5pt; color: #57534e; }
-            .footer { margin-top: 35px; border-top: 1px solid #e7e5e4; padding-top: 12px; font-size: 8pt; color: #78716c; text-align: center; }
-          </style>
-        </head>
-        <body>
-          <div class="header">
-            <div class="brand">logicindia<span>.tech</span></div>
-            <div class="subheading">Advanced Technology Group (ATG) · Executive Research Profile</div>
-            <div class="doc-id">DOC-ID: LOGICINDIA-ATG-2026-V4 · OCTOBER 2026 EDITION · AUTHORIZED PUBLIC BRIEFING</div>
-          </div>
-
-          <h2>1. Executive Charter & Heritage</h2>
-          <p><strong>logicindia.tech</strong> was founded to pioneer next-generation computational hardware, precision physical interfaces, zero-latency optical telemetry, and circular sustainable materials engineered from India to the global frontier.</p>
-          <p>Our multidisciplinary laboratories operate across Bengaluru, Hyderabad, and Pune. We combine high-modulus forged carbon architecture with dynamic micro-fluidic actuation to redefine how human intent interfaces with spatial computing and on-device neural edge models.</p>
-
-          <table class="stats-table">
-            <tr>
-              <td>
-                <div class="stats-val">84+</div>
-                <div class="stats-lbl">Deep-Tech Patents Filed</div>
-              </td>
-              <td>
-                <div class="stats-val">3 Hubs</div>
-                <div class="stats-lbl">National R&D Campuses</div>
-              </td>
-              <td>
-                <div class="stats-val">45,800+</div>
-                <div class="stats-lbl">Engineers on Dispatch</div>
-              </td>
-              <td>
-                <div class="stats-val">-140g CO2e</div>
-                <div class="stats-lbl">Net Hardware Carbon</div>
-              </td>
-            </tr>
-          </table>
-
-          <h2>2. Core Ongoing Technologies (Under Active Prototyping)</h2>';
-
-        foreach ($techs as $tech) {
-            $html .= '
-            <div class="card">
-              <div class="card-meta">' . esc($tech['category']) . ' · ' . esc($tech['tag']) . '</div>
-              <div class="card-title">' . esc($tech['title']) . '</div>
-              <div class="card-desc">' . esc($tech['summary']) . '</div>
-            </div>';
-        }
-
-        $html .= '
-          <h2>3. National R&D Campuses & Facilities</h2>';
-        foreach ($labs as $lab) {
-            $html .= '
-            <div class="card">
-              <div class="card-title">' . esc($lab['city']) . ' — ' . esc($lab['name']) . '</div>
-              <div class="card-desc"><strong>Location:</strong> ' . esc($lab['address']) . '<br><strong>Focus:</strong> ' . esc($lab['focus']) . '<br><strong>Inquiries:</strong> ' . esc($lab['contact_email']) . ' | ' . esc($lab['phone']) . '</div>
-            </div>';
-        }
-
-        $html .= '
-          <div class="footer">
-            Certified by logicindia.tech Advanced Technology Group (ATG) · Bengaluru & Hyderabad, India · &copy; ' . date('Y') . ' logicindia.tech Technologies.
-          </div>
-        </body>
-        </html>';
-
         try {
             $options = new Options();
             $options->set('isHtml5ParserEnabled', true);
@@ -200,7 +110,7 @@ class Home extends BaseController
             $options->set('defaultFont', 'Helvetica');
 
             $dompdf = new Dompdf($options);
-            $dompdf->loadHtml($html);
+            $dompdf->loadHtml($this->getExecutivePdfHtml());
             $dompdf->setPaper('A4', 'portrait');
             $dompdf->render();
 
@@ -315,31 +225,296 @@ class Home extends BaseController
     }
 
     /**
-     * Download Bio HTML / Legacy Fallback Route
+     * Download Bio HTML / In-Browser Fallback Route
      */
     public function downloadBioPdf()
     {
-        $bio = $this->techModel->getCompanyBio();
-        $labs = $this->techModel->getGlobalLabs();
-        $techs = $this->techModel->getOngoingTechnologies();
-
-        $html = "<!DOCTYPE html><html><head><title>logicindia.tech — Innovation Bio 2026</title><style>body{font-family:sans-serif;padding:30px;line-height:1.6;color:#1a1a1a}h1{color:#00B878;border-bottom:2px solid #00B878;padding-bottom:10px}.meta{color:#666;font-size:12px;margin-bottom:20px}.card{background:#f8f8f8;padding:15px;border-radius:8px;margin-bottom:15px}</style></head><body>";
-        $html .= "<h1>LOGICINDIA.TECH — CORPORATE & INNOVATION BIO</h1>";
-        $html .= "<div class='meta'>Document Ref: ATG-2026-BIO · logicindia.tech Technologies · " . date('F Y') . "</div>";
-        $html .= "<h2>Executive Summary</h2><p>{$bio['mission']}</p>";
-        $html .= "<h3>R&D Centers & Innovation Labs</h3>";
-        foreach ($labs as $lab) {
-            $html .= "<div class='card'><strong>{$lab['city']} — {$lab['name']}</strong><br>{$lab['address']}<br><em>Focus: {$lab['focus']}</em></div>";
-        }
-        $html .= "<h3>Pioneering Technologies</h3>";
-        foreach ($techs as $tech) {
-            $html .= "<div class='card'><strong>{$tech['title']}</strong><br>{$tech['summary']}</div>";
-        }
-        $html .= "<hr><p style='font-size:11px;color:#888'>Authorized release by logicindia.tech Advanced Technology Group (ATG). &copy; " . date('Y') . " logicindia.tech.</p>";
-        $html .= "</body></html>";
-
         return $this->response
             ->setHeader('Content-Type', 'text/html')
-            ->setBody($html);
+            ->setBody($this->getExecutivePdfHtml());
+    }
+
+    /**
+     * Helper to render the official single-page Executive Profile & Research Briefing
+     */
+    protected function getExecutivePdfHtml(): string
+    {
+        return '<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>LOGICINDIA.TECH — Executive Profile & Research Briefing</title>
+  <style>
+    @page {
+      size: A4 portrait;
+      margin: 30px 36px 26px 36px;
+    }
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      color: #1f2937;
+      margin: 0;
+      padding: 0;
+      font-size: 9.5pt;
+      line-height: 1.5;
+    }
+    
+    /* Header Black Banner */
+    .header-banner {
+      background-color: #0d0d11;
+      color: #ffffff;
+      padding: 22px 28px 20px 28px;
+    }
+    .header-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .header-table td {
+      vertical-align: middle;
+      padding: 0;
+    }
+    .brand-title {
+      font-size: 23pt;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      color: #ffffff;
+      margin: 0;
+      line-height: 1;
+    }
+    .brand-subtitle {
+      font-size: 7.8pt;
+      font-weight: 600;
+      color: #a1a1aa;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+      margin-top: 6px;
+    }
+    .meta-box {
+      text-align: right;
+      font-size: 8pt;
+      line-height: 1.5;
+      font-weight: 600;
+      color: #d4d4d8;
+    }
+    .meta-edition {
+      color: #a1a1aa;
+      font-size: 7.6pt;
+      font-weight: 500;
+    }
+
+    /* Green Accent Strip */
+    .accent-strip {
+      height: 4.5px;
+      background-color: #00E59B;
+      width: 100%;
+      margin-bottom: 22px;
+    }
+
+    /* Section Headings */
+    h2 {
+      font-size: 12.5pt;
+      font-weight: 800;
+      color: #09090b;
+      margin-top: 18px;
+      margin-bottom: 8px;
+      letter-spacing: -0.2px;
+    }
+
+    p.lead-text {
+      color: #374151;
+      font-size: 9.3pt;
+      line-height: 1.5;
+      margin: 0 0 10px 0;
+    }
+
+    /* Campus Footprint Card */
+    .footprint-card {
+      background-color: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 4px;
+      padding: 12px 18px;
+      margin: 14px 0 18px 0;
+    }
+    .footprint-title {
+      font-size: 8.2pt;
+      font-weight: 800;
+      color: #09090b;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      margin-bottom: 7px;
+    }
+    .footprint-item {
+      font-size: 8.8pt;
+      color: #475569;
+      line-height: 1.55;
+    }
+
+    /* Technologies Table */
+    .tech-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 6px;
+      margin-bottom: 10px;
+    }
+    .tech-table td {
+      padding: 5px 0 7px 0;
+    }
+    .bullet-col {
+      width: 20px;
+      vertical-align: top;
+      padding-top: 4px;
+    }
+    .green-dot {
+      width: 9px;
+      height: 9px;
+      background-color: #00E59B;
+      border-radius: 5px;
+    }
+    .tech-col {
+      vertical-align: top;
+      padding-left: 2px;
+    }
+    .tech-name {
+      font-size: 10.2pt;
+      font-weight: 700;
+      color: #09090b;
+      margin-bottom: 2px;
+    }
+    .tech-desc {
+      font-size: 8.9pt;
+      color: #4b5563;
+      line-height: 1.4;
+    }
+
+    /* Verification Coordinates */
+    .contact-box {
+      margin-top: 8px;
+      margin-bottom: 18px;
+      font-size: 9pt;
+      color: #374151;
+      line-height: 1.65;
+    }
+    .contact-line {
+      margin-bottom: 2px;
+    }
+    .contact-label {
+      font-weight: 600;
+      color: #111827;
+    }
+
+    /* Footer */
+    .footer-divider {
+      border-top: 1px solid #e5e7eb;
+      margin-top: 20px;
+      padding-top: 10px;
+    }
+    .footer-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 7.6pt;
+      color: #6b7280;
+    }
+    .footer-left {
+      text-align: left;
+    }
+    .footer-right {
+      text-align: right;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header Black Banner -->
+  <div class="header-banner">
+    <table class="header-table">
+      <tr>
+        <td>
+          <div class="brand-title">LOGICINDIA.TECH</div>
+          <div class="brand-subtitle">ADVANCED TECHNOLOGY GROUP &middot; EXECUTIVE PROFILE &amp; RESEARCH BRIEFING</div>
+        </td>
+        <td class="meta-box" style="width: 220px;">
+          <div>DOC-ID: LOGICINDIA-ATG-2026</div>
+          <div class="meta-edition">OCTOBER 2026 EDITION</div>
+        </td>
+      </tr>
+    </table>
+  </div>
+  
+  <!-- Green Accent Strip -->
+  <div class="accent-strip"></div>
+
+  <!-- 1. Executive Summary & Frontier Charter -->
+  <h2>1. Executive Summary &amp; Frontier Charter</h2>
+  <p class="lead-text">
+    logicindia.tech was established to engineer the future of high-bandwidth human-machine interaction, physical computing peripherals, and indigenous deep-tech hardware systems from India to the global frontier.
+  </p>
+  <p class="lead-text">
+    Our research labs operate across Bengaluru, Hyderabad, and Pune, focusing on three technological breakthroughs: dynamic micro-fluidic tactile actuation, zero-latency optical telemetry, and circular bio-composite materials engineered to make computational hardware a carbon-negative asset.
+  </p>
+
+  <!-- Campus Footprint Card -->
+  <div class="footprint-card">
+    <div class="footprint-title">NATIONAL R&amp;D RESEARCH CAMPUS FOOTPRINT</div>
+    <div class="footprint-item">&bull; <strong>Bengaluru Advanced Computing &amp; Haptics Center:</strong> Electronic City Phase 1, Bengaluru</div>
+    <div class="footprint-item">&bull; <strong>Hyderabad Semiconductor &amp; Optical Telemetry Campus:</strong> HITEC City, Hyderabad</div>
+    <div class="footprint-item">&bull; <strong>Pune Materials &amp; Circular Hardware Design Hub:</strong> Hinjawadi Tech Park, Pune</div>
+  </div>
+
+  <!-- 2. Ongoing Core Technologies (Under Active Prototyping) -->
+  <h2>2. Ongoing Core Technologies (Under Active Prototyping)</h2>
+
+  <table class="tech-table">
+    <tr>
+      <td class="bullet-col"><div class="green-dot"></div></td>
+      <td class="tech-col">
+        <div class="tech-name">Micro-Fluidic Actuation (Haptics 2.0)</div>
+        <div class="tech-desc">Sub-millisecond tactile texture switching dynamically tuning keystroke actuation from 35g to 85g.</div>
+      </td>
+    </tr>
+    <tr>
+      <td class="bullet-col"><div class="green-dot"></div></td>
+      <td class="tech-col">
+        <div class="tech-name">Quantum-Sync Optical Telemetry</div>
+        <div class="tech-desc">16,000 Hz optical pulse synchronization directly into ambient monitor sensors with sub-0.1ms delay.</div>
+      </td>
+    </tr>
+    <tr>
+      <td class="bullet-col"><div class="green-dot"></div></td>
+      <td class="tech-col">
+        <div class="tech-name">Forged Ocean Carbon Composites</div>
+        <div class="tech-desc">Chassis architecture utilizing marine algal binders and recovered carbon fibers (-140g net CO2e balance).</div>
+      </td>
+    </tr>
+    <tr>
+      <td class="bullet-col"><div class="green-dot"></div></td>
+      <td class="tech-col">
+        <div class="tech-name">On-Peripheral 1.2W Neural Engine</div>
+        <div class="tech-desc">Ultra-low power edge NPU running local biomechanical prediction models without cloud data dependency.</div>
+      </td>
+    </tr>
+  </table>
+
+  <!-- 3. Official Verification & Contact Coordinates -->
+  <h2>3. Official Verification &amp; Contact Coordinates</h2>
+  <div class="contact-box">
+    <div class="contact-line"><span class="contact-label">Advanced Inquiries:</span> innovations@logicindia.tech</div>
+    <div class="contact-line"><span class="contact-label">Press &amp; Analyst Relations:</span> press@logicindia.tech</div>
+    <div class="contact-line"><span class="contact-label">Official Portal:</span> https://logicindia.tech &middot; Bengaluru &amp; Hyderabad, India</div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer-divider">
+    <table class="footer-table">
+      <tr>
+        <td class="footer-left">Authorized by logicindia.tech Advanced Technology Group (ATG) &middot; Certified Authentic 2026</td>
+        <td class="footer-right">Page 1 of 1 &middot; Public Innovation Briefing</td>
+      </tr>
+    </table>
+  </div>
+
+</body>
+</html>';
     }
 }
